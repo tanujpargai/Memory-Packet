@@ -2,6 +2,7 @@
 An AI-powered cognitive assistant for early-stage dementia. Converts voice notes into structured "Memory Packets" to aid retention. Built with Next.js, Firebase, and Gemini 1.5.
 
 
+
 # MemoryPacket 🧠 | Hack the Winter Submission
 
 > **"Preserving the person, one memory at a time."**
@@ -14,31 +15,26 @@ For the 55 million people living with dementia, the terrifying reality is the sl
 
 Instead of just recording audio, it uses **Google Gemini 1.5 Flash** (Multimodal AI) to listen, analyze, and synthesize daily conversations into **"Memory Packets"**—structured, empathetic summaries that are easy to recall.
 
-## 🌟 Key Features
-* **🔴 One-Tap Interface:** Designed for geriatric users. No complex menus. Just a massive "Record" button.
-* **⚡ Instant Analysis:** Uses Gemini 1.5 Flash to process audio directly (no intermediate text-to-speech needed) for sub-second latency.
-* **🧩 Memory Packets:** Returns data in a structured JSON format:
-    * **The Story:** A warm, second-person summary (e.g., "You spoke with your grandson...")
-    * **The Mood:** Emotional analysis (Happy, Confused, Anxious).
-    * **The Anchors:** Key entities (Names, Dates, Places) extracted for future search.
-* **🎨 High-Contrast UI:** Built specifically for aging eyes (WCAG AAA standard).
-
-## 🛠️ Tech Stack
-* **Frontend:** Next.js 14 (App Router), Tailwind CSS
-* **Backend:** Firebase (Firestore & Storage)
-* **AI Engine:** Google Gemini API (`gemini-1.5-flash`)
-* **Language:** TypeScript
-
-## 🚀 How It Works
-1.  **Capture:** User taps the Red Button and speaks.
-2.  **Process:** Audio Blob is streamed to Firebase Storage.
-3.  **Analyze:** Server Action triggers Gemini 1.5 Flash with the audio buffer.
-4.  **Packetize:** Gemini extracts the "Memory Packet" (JSON).
-5.  **Display:** The dashboard updates in real-time with the new Memory Card.
-
-## 🔮 Future Roadmap
-* **Active Recall:** AI quizzes the user ("Who did you meet yesterday?") to strengthen neural pathways.
-* **Caregiver Mode:** Alerts family members if the "Mood" is consistently "Anxious" or "Confused."
-
 ---
-*Submitted for Hack the Winter*
+
+## ⚙️ Technical Flow & Architecture
+This system utilizes a Serverless Architecture powered by Next.js and Firebase to ensure low latency and high availability.
+
+```mermaid
+graph TD
+    User((User/Patient)) -->|1. Tap Record| UI[Frontend UI (Next.js)]
+    UI -->|2. Stream Audio Blob| Server[Server Action (Node.js)]
+    
+    subgraph "AI Processing Layer"
+    Server -->|3. Send Buffer| Gemini[Google Gemini 1.5 Flash]
+    Gemini -->|4. Multimodal Analysis| Gemini
+    Gemini -->|5. Return JSON Packet| Server
+    end
+    
+    subgraph "Data Persistence"
+    Server -->|6. Store Metadata| Firestore[(Firebase Firestore)]
+    Server -->|7. Upload Audio| Storage[(Firebase Storage)]
+    end
+    
+    Firestore -->|8. Real-time Sync| UI
+    UI -->|9. Display Memory Card| User
